@@ -52,23 +52,37 @@ networks:
 2. Добавьте необходимые тома с данными и конфигурацией (конфигурация лежит в репозитории в директории [6-04/prometheus](https://github.com/netology-code/sdvps-homeworks/tree/main/lecture_demos/6-04/prometheus) ).
 3. Обеспечьте внешний доступ к порту 9090 c докер-сервера.
 
-1. `Заполните здесь этапы выполнения, если требуется ....`
-2. `Заполните здесь этапы выполнения, если требуется ....`
-3. `Заполните здесь этапы выполнения, если требуется ....`
-4. `Заполните здесь этапы выполнения, если требуется ....`
-5. `Заполните здесь этапы выполнения, если требуется ....`
-6. 
+---
+
+1. `Создать директорию prometheus и скопировать туда`  [6-04/prometheus/prometheus.yml](https://github.com/netology-code/sdvps-homeworks/tree/main/lecture_demos/6-04/prometheus/prometheus.yml)
+2. `дополнить docker-compose.yml`
 
 ```
-Поле для вставки кода...
-....
-....
-....
-....
-```
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus:v3.7.0
+    container_name: klochek_m_e-netology-prometheus
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+    ports:
+    - 9090:9090
+    volumes:
+    - ./prometheus:/etc/prometheus
+    - prometheus-data:/prometheus
+    networks:
+    - klochek_m_e-my-netology-hw
 
-`При необходимости прикрепитe сюда скриншоты
-![Название скриншота](ссылка на скриншот)`
+volumes: 
+  prometheus-data:
+
+networks:
+  klochek_m_e-my-netology-hw:
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+
+```
 
 ---
 

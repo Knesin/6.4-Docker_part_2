@@ -1,7 +1,19 @@
-version: "3"
+version: '3'
 services:
+  prometheus:
+    image: prom/prometheus:v3.7.0
+    container_name: klochek_m_e-netology-prometheus
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+    ports:
+    - 9090:9090
+    volumes:
+    - ./prometheus:/etc/prometheus
+    - prometheus-data:/prometheus
+    networks:
+    - klochek_m_e-my-netology-hw
 
-volumes:
+volumes: 
+  prometheus-data:
 
 networks:
   klochek_m_e-my-netology-hw:
