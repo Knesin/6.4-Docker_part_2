@@ -71,6 +71,7 @@ services:
     - prometheus-data:/prometheus
     networks:
     - klochek_m_e-my-netology-hw
+    restart: always
 
 volumes: 
   prometheus-data:
@@ -92,25 +93,45 @@ networks:
 
 1. Создайте конфигурацию docker-compose для Pushgateway с именем контейнера <ваши фамилия и инициалы>-netology-pushgateway. 
 2. Обеспечьте внешний доступ к порту 9091 c докер-сервера.
-
-
-1. `Заполните здесь этапы выполнения, если требуется ....`
-2. `Заполните здесь этапы выполнения, если требуется ....`
-3. `Заполните здесь этапы выполнения, если требуется ....`
-4. `Заполните здесь этапы выполнения, если требуется ....`
-5. `Заполните здесь этапы выполнения, если требуется ....`
-6. 
+---
 
 ```
-Поле для вставки кода...
-....
-....
-....
-....
-```
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus:v3.7.0
+    container_name: klochek_m_e-netology-prometheus
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+    ports:
+    - 9090:9090
+    volumes:
+    - ./prometheus:/etc/prometheus
+    - prometheus-data:/prometheus
+    networks:
+    - klochek_m_e-my-netology-hw
+    restart: always
+  pushgateway:
+    image: prom/pushgateway:v1.11.1
+    container_name: klochek_m_e-netology-pushgateway
+    ports:
+    - 9091:9091
+    networks:
+    - klochek_m_e-my-netology-hw
+    depends_on:
+    - prometheus
+    restart: unless-stopped
 
-`При необходимости прикрепитe сюда скриншоты
-![Название скриншота](ссылка на скриншот)`
+volumes: 
+  prometheus-data:
+
+networks:
+  klochek_m_e-my-netology-hw:
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+
+```
 
 ---
 
@@ -122,26 +143,64 @@ networks:
 2. Добавьте необходимые тома с данными и конфигурацией (конфигурация лежит в репозитории в директории [6-04/grafana](https://github.com/netology-code/sdvps-homeworks/blob/main/lecture_demos/6-04/grafana/custom.ini).
 3. Добавьте переменную окружения с путем до файла с кастомными настройками (должен быть в томе), в самом файле пропишите логин=<ваши фамилия и инициалы> пароль=netology.
 4. Обеспечьте внешний доступ к порту 3000 c порта 80 докер-сервера.
-
-1. `Заполните здесь этапы выполнения, если требуется ....`
-2. `Заполните здесь этапы выполнения, если требуется ....`
-3. `Заполните здесь этапы выполнения, если требуется ....`
-4. `Заполните здесь этапы выполнения, если требуется ....`
-5. `Заполните здесь этапы выполнения, если требуется ....`
-6. 
-
-```
-Поле для вставки кода...
-....
-....
-....
-....
-```
-
-`При необходимости прикрепитe сюда скриншоты
-![Название скриншота](ссылка на скриншот)`
-
 ---
+
+1. создать папку grafana, в ней файлик custom.ini из лекции, внести измененния для задания
+
+```
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus:v3.7.0
+    container_name: klochek_m_e-netology-prometheus
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+    ports:
+    - 9090:9090
+    volumes:
+    - ./prometheus:/etc/prometheus
+    - prometheus-data:/prometheus
+    networks:
+    - klochek_m_e-my-netology-hw
+    restart: always
+  pushgateway:
+    image: prom/pushgateway:v1.11.1
+    container_name: klochek_m_e-netology-pushgateway
+    ports:
+    - 9091:9091
+    networks:
+    - klochek_m_e-my-netology-hw
+    depends_on:
+    - prometheus
+    restart: unless-stopped
+  grafana:
+   image: grafana/grafana
+   container_name: klochek_m_e-netology-grafana
+   environment:
+    GF_PATHS_CONFIG: /etc/grafana/custom.ini
+   ports:
+   - 80:3000
+   volumes:
+   - ./grafana:/etc/grafana
+   - grafana-data:/var/lib/grafana
+   networks:
+   - klochek_m_e-my-netology-hw
+   depends_on:
+   - prometheus
+   restart: unless-stopped
+
+volumes: 
+  prometheus-data:
+  grafana-data:
+
+networks:
+  klochek_m_e-my-netology-hw:
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+
+```
+
 ### Задание 6 
 
 **Выполните действия.**
@@ -151,23 +210,21 @@ networks:
 3. Настройте использование контейнерами одной сети.
 5. Запустите сценарий в detached режиме.
 
-1. `Заполните здесь этапы выполнения, если требуется ....`
-2. `Заполните здесь этапы выполнения, если требуется ....`
-3. `Заполните здесь этапы выполнения, если требуется ....`
-4. `Заполните здесь этапы выполнения, если требуется ....`
-5. `Заполните здесь этапы выполнения, если требуется ....`
-6. 
+---
+В передыдущих заданиях это уже было сделано
 
-```
-Поле для вставки кода...
-....
-....
-....
-....
-```
+1. **depends_on:** - указывает после запуска какого контейнера разрешено самускать этот
+2. **restart:** - задаёт правило перезапуска
+3. **networks:** - доступные для контейненра сети
+4. `docker-compose up -d`
 
-`При необходимости прикрепитe сюда скриншоты
-![Название скриншота](ссылка на скриншот)`
+
+![Первый запуск](img/myimg1.png)
+
+Была проблема с графаной из-за уже запущенного сервиса на 80 порту (из прошлых ДЗ)
+И вторая проблема с владельцами конфигурационных файлов когда подключал общую папку с Windows в VirtualBox
+
+![Все запустилось](img/myimg2.png)
 
 ---
 
@@ -184,24 +241,67 @@ networks:
 * docker-compose.yml **целиком**;
 * скриншот команды docker ps после запуске docker-compose.yml;
 * скриншот графика, постоенного на основе вашей метрики.
+  
+  ---
 
-1. `Заполните здесь этапы выполнения, если требуется ....`
-2. `Заполните здесь этапы выполнения, если требуется ....`
-3. `Заполните здесь этапы выполнения, если требуется ....`
-4. `Заполните здесь этапы выполнения, если требуется ....`
-5. `Заполните здесь этапы выполнения, если требуется ....`
-6. 
 
 ```
-Поле для вставки кода...
-....
-....
-....
-....
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus:v3.7.0
+    container_name: klochek_m_e-netology-prometheus
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+    ports:
+    - 9090:9090
+    volumes:
+    - ./prometheus:/etc/prometheus
+    - prometheus-data:/prometheus
+    networks:
+    - klochek_m_e-my-netology-hw
+    restart: always
+  pushgateway:
+    image: prom/pushgateway:v1.11.1
+    container_name: klochek_m_e-netology-pushgateway
+    ports:
+    - 9091:9091
+    networks:
+    - klochek_m_e-my-netology-hw
+    depends_on:
+    - prometheus
+    restart: unless-stopped
+  grafana:
+   image: grafana/grafana
+   container_name: klochek_m_e-netology-grafana
+   environment:
+    GF_PATHS_CONFIG: /etc/grafana/custom.ini
+   ports:
+   - 80:3000
+   volumes:
+   - ./grafana:/etc/grafana
+   - grafana-data:/var/lib/grafana
+   networks:
+   - klochek_m_e-my-netology-hw
+   depends_on:
+   - prometheus
+   restart: unless-stopped
+
+volumes: 
+  prometheus-data:
+  grafana-data:
+
+networks:
+  klochek_m_e-my-netology-hw:
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+
 ```
 
-`При необходимости прикрепитe сюда скриншоты
-![Название скриншота](ссылка на скриншот)`
+
+![Второй пункт](img/myimg3.png)
+![График](img/myimg4.png)
 
 ---
 
@@ -213,23 +313,11 @@ networks:
 
 В качестве решения приложите скриншот консоли с проделанными действиями.
 
-1. `Заполните здесь этапы выполнения, если требуется ....`
-2. `Заполните здесь этапы выполнения, если требуется ....`
-3. `Заполните здесь этапы выполнения, если требуется ....`
-4. `Заполните здесь этапы выполнения, если требуется ....`
-5. `Заполните здесь этапы выполнения, если требуется ....`
-6. 
+---
 
-```
-Поле для вставки кода...
-....
-....
-....
-....
-```
+1. `docker-compose down`
 
-`При необходимости прикрепитe сюда скриншоты
-![Название скриншота](ссылка на скриншот)`
+![Down](img/myimg5.png)
 
 ---
 
@@ -250,6 +338,8 @@ networks:
 
 В качестве решения приложите скриншот с событием из Alertmanager.
 
+
+---
 1. `Заполните здесь этапы выполнения, если требуется ....`
 2. `Заполните здесь этапы выполнения, если требуется ....`
 3. `Заполните здесь этапы выполнения, если требуется ....`
@@ -278,7 +368,7 @@ networks:
 
 1. Опишите выполненный вами процесс развертывания сценария.
 2. Как вы думаете зачем может понадобиться такой способ развертывания?
-
+---
 1. `Заполните здесь этапы выполнения, если требуется ....`
 2. `Заполните здесь этапы выполнения, если требуется ....`
 3. `Заполните здесь этапы выполнения, если требуется ....`

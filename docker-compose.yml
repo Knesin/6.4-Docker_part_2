@@ -11,6 +11,7 @@ services:
     - prometheus-data:/prometheus
     networks:
     - klochek_m_e-my-netology-hw
+    restart: always
   pushgateway:
     image: prom/pushgateway:v1.11.1
     container_name: klochek_m_e-netology-pushgateway
@@ -21,9 +22,25 @@ services:
     depends_on:
     - prometheus
     restart: unless-stopped
+  grafana:
+   image: grafana/grafana
+   container_name: klochek_m_e-netology-grafana
+   environment:
+    GF_PATHS_CONFIG: /etc/grafana/custom.ini
+   ports:
+   - 80:3000
+   volumes:
+   - ./grafana:/etc/grafana
+   - grafana-data:/var/lib/grafana
+   networks:
+   - klochek_m_e-my-netology-hw
+   depends_on:
+   - prometheus
+   restart: unless-stopped
 
 volumes: 
   prometheus-data:
+  grafana-data:
 
 networks:
   klochek_m_e-my-netology-hw:
