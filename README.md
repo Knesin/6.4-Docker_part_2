@@ -28,7 +28,7 @@
 Ваша подсеть должна называться: <ваши фамилия и инициалы>-my-netology-hw.
 Все приложения из последующих заданий должны находиться в этой конфигурации.
 
-```
+```yml
 version: "3"
 services:
 
@@ -57,7 +57,7 @@ networks:
 1. `Создать директорию prometheus и скопировать туда`  [6-04/prometheus/prometheus.yml](https://github.com/netology-code/sdvps-homeworks/tree/main/lecture_demos/6-04/prometheus/prometheus.yml)
 2. `дополнить docker-compose.yml`
 
-```
+```yml
 version: '3'
 services:
   prometheus:
@@ -95,7 +95,7 @@ networks:
 2. Обеспечьте внешний доступ к порту 9091 c докер-сервера.
 ---
 
-```
+```yml
 version: '3'
 services:
   prometheus:
@@ -147,7 +147,7 @@ networks:
 
 1. создать папку grafana, в ней файлик custom.ini из лекции, внести измененния для задания
 
-```
+```yml
 version: '3'
 services:
   prometheus:
@@ -245,7 +245,7 @@ networks:
   ---
 
 
-```
+```yml
 version: '3'
 services:
   prometheus:
